@@ -1,48 +1,38 @@
 # Tagshop — AI Product Card Generator
 
-Built for the Indus Net Technologies (INT) tech assignment — Assignment 2:
-AI Content Generator for Product Cards.
+AI-powered product card generator built for the **Indus Net Technologies (INT) Tech Assignment — Assignment 2**.
 
-Enter a product name and category, and the app generates a title, a short
-description, and five keyword tags via Google Gemini, then renders them as
-a printed receipt.
+Enter a product name and category, and Tagshop uses **Google Gemini** to generate a product title, short description, and five keyword tags, displayed as a receipt-style product card.
 
-## Stack
+## Tech Stack
 
-- React 18 + Vite
-- Google Gemini REST API (`gemini-flash-latest`), called directly from the
-  browser with `fetch` — no backend, per the assignment's scope
+* React 18 + Vite
+* Google Gemini REST API
+* JavaScript
+* CSS
 
-## How AI is used
+## How It Works
 
-`src/lib/gemini.js` builds a prompt asking Gemini for strict JSON —
-`{ title, description, tags }` — and calls Gemini's `generateContent` REST
-endpoint directly. The response is:
+```text
+Product Name + Category
+          ↓
+      Gemini API
+          ↓
+ Title + Description + 5 Tags
+          ↓
+    Receipt-style Card
+```
 
-1. Checked for a `MAX_TOKENS` finish reason (truncated output)
-2. Stripped of any stray markdown fences the model adds
-3. Parsed as JSON and validated for the expected fields
-4. Rendered by `ProductCard.jsx`
+The Gemini response is validated as JSON before being rendered. The app also handles truncated or malformed responses.
 
-Thinking mode is explicitly turned off (`thinkingConfig.thinkingBudget: 0`)
-since this is a short copywriting task that doesn't need it, and it was
-eating the output budget before the model could write the actual answer.
+## Design
 
-## Design choices
+The UI is inspired by a **receipt printer** rather than a traditional product card:
 
-The brief asks for a styled product card, not a specific look, so the UI
-is built around one concrete idea instead of a generic dashboard layout:
-the app is framed as a **receipt printer** — you fill in a product at the
-top, and the generated listing prints out below as an actual receipt
-(monospace type, dashed tear rules, a torn perforated edge, a barcode).
-
-This was a deliberate choice over a typical card/dashboard UI:
-- One consistent metaphor carried through typography, layout, and copy
-  ("PRINT CARD", "Printing…", "Jammed") instead of decoration added on top
-- Monospace throughout (IBM Plex Mono) instead of a display font + body
-  font pairing, to match the "printed" feel
-- Minimal color — ink black, paper, and a single stamp-red accent — rather
-  than a gradient or multi-color palette
+* Monospace typography
+* Receipt-style layout
+* Dashed separators and torn edge
+* Minimal black, paper, and red color palette
 
 ## Setup
 
@@ -50,35 +40,36 @@ This was a deliberate choice over a typical card/dashboard UI:
 npm install
 ```
 
-Create a `.env` file in the project root:
+Create a `.env` file:
 
+```env
 VITE_GEMINI_API_KEY=your_real_key_here
+```
 
-
-Then:
+Run the app:
 
 ```bash
 npm run dev
 ```
 
-Open the printed local URL and generate a card.
+## Project Structure
 
-## Deploying to Vercel
+```text
+src/
+├── components/
+│   ├── ProductForm.jsx
+│   └── ProductCard.jsx
+├── lib/
+│   └── gemini.js
+├── App.jsx
+├── index.css
+└── main.jsx
+```
 
-Push to GitHub (`.env` is git-ignored, so the key isn't in the repo), import
-the repo on vercel.com, and add `VITE_GEMINI_API_KEY` as an environment
-variable in Project Settings before deploying.
+## Deployment
 
-## Project structure
+The project can be deployed to **Vercel** by adding `VITE_GEMINI_API_KEY` to the project's environment variables.
 
-├── src/
-│ ├── components/
-│ │ ├── ProductForm.jsx
-│ │ └── ProductCard.jsx
-│ ├── lib/
-│ │ └── gemini.js # calls Gemini's REST API
-│ ├── App.jsx
-│ ├── index.css
-│ └── main.jsx
-├── index.html
-└── vite.config.js
+---
+
+**Built for the Indus Net Technologies Tech Assignment.**
